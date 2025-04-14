@@ -1,0 +1,10 @@
+name: LurienStaff
+version: '1.0'
+main: dev.lurien.staff.lurienStaff.LurienStaff
+api-version: '1.21'
+prefix: LurienStaff
+authors: [ DamianFarias ]
+description: Staff Management of LurienMC Server
+commands:
+  staffmode:
+    description: Toggle the activation of staffmode
