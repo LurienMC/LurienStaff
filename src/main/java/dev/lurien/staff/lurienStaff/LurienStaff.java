@@ -1,6 +1,8 @@
 package dev.lurien.staff.lurienStaff;
 
 import dev.lurien.staff.lurienStaff.command.StaffModeCommand;
+import dev.lurien.staff.lurienStaff.command.StaffModeTopCommand;
+import dev.lurien.staff.lurienStaff.configuration.DataConfig;
 import dev.lurien.staff.lurienStaff.utils.ServerVersion;
 import lombok.Getter;
 import org.bukkit.Bukkit;
@@ -20,11 +22,14 @@ public final class LurienStaff extends JavaPlugin {
     @Getter
     private static ServerVersion serverVersion;
     private static final String webhookUrl = "https://discord.com/api/webhooks/1361180251044053166/WQ-VMVM17uybm6ykNsX21GOKtqVW2bXs8IoVsleNlmtCjZQxtxKW6Gkk_gzXloz8c7Co";
+    @Getter
+    private static DataConfig data;
 
     @Override
     public void onEnable() {
         String packageName = Bukkit.getServer().getClass().getPackage().getName();
         String bukkitVersion = Bukkit.getServer().getBukkitVersion().split("-")[0];
+
         switch(bukkitVersion){
             case "1.20.5":
             case "1.20.6":
@@ -45,7 +50,12 @@ public final class LurienStaff extends JavaPlugin {
                 serverVersion = ServerVersion.valueOf(packageName.replace("org.bukkit.craftbukkit.", ""));
         }
 
+        data = new DataConfig(this);
+
         Objects.requireNonNull(getCommand("staffmode")).setExecutor(new StaffModeCommand());
+        Objects.requireNonNull(getCommand("staffmode")).setTabCompleter(new StaffModeCommand());
+        Objects.requireNonNull(getCommand("staffmodetop")).setExecutor(new StaffModeTopCommand());
+        Objects.requireNonNull(getCommand("staffmodetop")).setTabCompleter(new StaffModeTopCommand());
     }
 
     @Override

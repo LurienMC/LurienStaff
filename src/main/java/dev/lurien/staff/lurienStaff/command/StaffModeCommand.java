@@ -1,17 +1,21 @@
 package dev.lurien.staff.lurienStaff.command;
 
 import dev.lurien.staff.lurienStaff.managers.StaffModeManager;
+import dev.lurien.staff.lurienStaff.utils.MessagesUtils;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
+import java.util.List;
 
 import static dev.lurien.staff.lurienStaff.utils.MessagesUtils.sendMessageWithPrefix;
 
-public class StaffModeCommand implements CommandExecutor {
+public class StaffModeCommand implements TabExecutor {
+
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String s, @NotNull String @NotNull [] args) {
         if(sender instanceof Player p){
@@ -33,7 +37,8 @@ public class StaffModeCommand implements CommandExecutor {
 
                 sendMessageWithPrefix(sender, Arrays.asList("&a&l✔ &aActivaste el modo staff.",
                         " ",
-                        "&7Created by @octdamfar"));
+                        "&7Created by @octdamfar",
+                        " "));
                 StaffModeManager.setEnable(p);
                 return true;
             }else if(args[0].equalsIgnoreCase("desactivado")){
@@ -44,8 +49,9 @@ public class StaffModeCommand implements CommandExecutor {
 
                 sendMessageWithPrefix(sender, Arrays.asList("&a&l✖ &aDesactivaste el modo staff.",
                         " ",
-                        "&7Created by @octdamfar"));
-                StaffModeManager.setDisable(p);
+                        "&7Created by @octdamfar",
+                        " "));
+                StaffModeManager.setDisable(p, false);
                 return true;
             }else{
                 sendMessageWithPrefix(sender, "&6&l! &6Argumento incorrecto. Usa: /staffmode activado | desactivado");
@@ -54,5 +60,14 @@ public class StaffModeCommand implements CommandExecutor {
 
         }
         return false;
+    }
+
+    @Override
+    public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String s, @NotNull String @NotNull [] args) {
+        if(sender.hasPermission("lurienstaff.staffmode") && args.length == 1){
+            return MessagesUtils.filterSuggestions(List.of("activado", "desactivado"), args[0]);
+        }
+
+        return List.of();
     }
 }

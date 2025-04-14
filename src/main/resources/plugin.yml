@@ -8,3 +8,5 @@ description: Staff Management of LurienMC Server
 commands:
   staffmode:
     description: Toggle the activation of staffmode
+  staffmodetop:
+    description: Show the top staffs in staff mode

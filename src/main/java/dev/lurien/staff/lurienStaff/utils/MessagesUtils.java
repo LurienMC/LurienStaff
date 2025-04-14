@@ -11,6 +11,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 @SuppressWarnings({"deprecation", "unused"})
 public class MessagesUtils {
@@ -52,6 +53,16 @@ public class MessagesUtils {
             sender.sendMessage(colorize(s));
 
         }
+    }
+
+    public static List<String> filterSuggestions(List<String> suggestions, String currentInput) {
+        if (currentInput.isEmpty()) {
+            return suggestions;
+        }
+
+        return suggestions.stream()
+                .filter(s -> s.toLowerCase().startsWith(currentInput.toLowerCase()))
+                .collect(Collectors.toList());
     }
 
     public static void sendMessageWithPrefix(CommandSender sender, String s){
