@@ -14,3 +14,8 @@ commands:
     description: Teleports a player to your position
     aliases:
       - s
+  tprandomplayer:
+    description: Teleport you to a random player
+    aliases:
+      - tprp
+      - tpr
