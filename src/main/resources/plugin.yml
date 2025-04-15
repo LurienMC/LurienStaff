@@ -21,3 +21,7 @@ commands:
       - tpr
   stafflist:
     description: Show a list of online staffs
+  staffchat:
+    description: Chat channel for staff members
+    aliases:
+      - sc

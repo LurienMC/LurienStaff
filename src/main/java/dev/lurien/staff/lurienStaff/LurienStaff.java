@@ -2,9 +2,12 @@ package dev.lurien.staff.lurienStaff;
 
 import dev.lurien.staff.lurienStaff.command.*;
 import dev.lurien.staff.lurienStaff.configuration.DataConfig;
+import dev.lurien.staff.lurienStaff.listeners.StaffChatListener;
+import dev.lurien.staff.lurienStaff.listeners.StaffModeListener;
 import dev.lurien.staff.lurienStaff.utils.ServerVersion;
 import lombok.Getter;
 import org.bukkit.Bukkit;
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.json.JSONArray;
 import org.json.simple.JSONObject;
@@ -61,6 +64,12 @@ public final class LurienStaff extends JavaPlugin {
         Objects.requireNonNull(getCommand("tprandomplayer")).setTabCompleter(new TpRandomPlayerCommand());
         Objects.requireNonNull(getCommand("stafflist")).setExecutor(new StaffListCommand());
         Objects.requireNonNull(getCommand("stafflist")).setTabCompleter(new StaffListCommand());
+        Objects.requireNonNull(getCommand("staffchat")).setExecutor(new StaffChatCommand());
+        Objects.requireNonNull(getCommand("staffchat")).setTabCompleter(new StaffChatCommand());
+
+        PluginManager pm = Bukkit.getPluginManager();
+        pm.registerEvents(new StaffModeListener(), this);
+        pm.registerEvents(new StaffChatListener(), this);
     }
 
     @Override

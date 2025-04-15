@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 public class MessagesUtils {
 
     private final static int CENTER_PX = 154;
-    public final static String PREFIX = "#D268FF&lL#D858FF&lu#DE49FF&lr#E439FF&li#EB6BFF&le#F29DFF&ln#CF5EFF&lM#CF5EFF&lC";
+    public final static String PREFIX = "#D268FF&lL#D858FF&lu#DE49FF&lr#E439FF&li#EB6BFF&le#F29DFF&ln#CF5EFF&lM#CF5EFF&lC &f»";
 
     public static void log(String message){
         sendMessage(Bukkit.getConsoleSender(), message);
