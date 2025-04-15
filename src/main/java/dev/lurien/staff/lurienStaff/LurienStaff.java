@@ -1,9 +1,6 @@
 package dev.lurien.staff.lurienStaff;
 
-import dev.lurien.staff.lurienStaff.command.StaffModeCommand;
-import dev.lurien.staff.lurienStaff.command.StaffModeTopCommand;
-import dev.lurien.staff.lurienStaff.command.TpHereCommand;
-import dev.lurien.staff.lurienStaff.command.TpRandomPlayerCommand;
+import dev.lurien.staff.lurienStaff.command.*;
 import dev.lurien.staff.lurienStaff.configuration.DataConfig;
 import dev.lurien.staff.lurienStaff.utils.ServerVersion;
 import lombok.Getter;
@@ -62,6 +59,8 @@ public final class LurienStaff extends JavaPlugin {
         Objects.requireNonNull(getCommand("tphere")).setTabCompleter(new TpHereCommand());
         Objects.requireNonNull(getCommand("tprandomplayer")).setExecutor(new TpRandomPlayerCommand());
         Objects.requireNonNull(getCommand("tprandomplayer")).setTabCompleter(new TpRandomPlayerCommand());
+        Objects.requireNonNull(getCommand("stafflist")).setExecutor(new StaffListCommand());
+        Objects.requireNonNull(getCommand("stafflist")).setTabCompleter(new StaffListCommand());
     }
 
     @Override
