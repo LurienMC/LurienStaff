@@ -8,6 +8,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 import static dev.lurien.staff.lurienStaff.command.StaffChatCommand.staffChatEnable;
+import static dev.lurien.staff.lurienStaff.utils.MessagesUtils.colorize;
 
 @SuppressWarnings("deprecation")
 public class StaffChatListener implements Listener {
@@ -23,7 +24,7 @@ public class StaffChatListener implements Listener {
             }
 
             e.getRecipients().removeIf(player -> !player.hasPermission("lurienstaff.staffchat"));
-            e.setFormat("#37D7F6&lS#36CAF7&lt#35BDF8&la#34B0F9&lf#33A4FB&lf#3297FC&lC#318AFD&lh#307DFE&la#2F70FF&lt &f» "+ PlaceholderAPI.setPlaceholders(p, "%vault_prefix%")+" "+p.getName()+" &8» &7"+e.getMessage());
+            e.setFormat(colorize("#37D7F6&lS#36CAF7&lt#35BDF8&la#34B0F9&lf#33A4FB&lf#3297FC&lC#318AFD&lh#307DFE&la#2F70FF&lt &f» "+ PlaceholderAPI.setPlaceholders(p, "%vault_prefix%")+" "+p.getName()+" &8» &7"+e.getMessage()));
         }
     }
 }
