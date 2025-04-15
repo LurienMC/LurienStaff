@@ -10,3 +10,7 @@ commands:
     description: Toggle the activation of staffmode
   staffmodetop:
     description: Show the top staffs in staff mode
+  tphere:
+    description: Teleports a player to your position
+    aliases:
+      - s
