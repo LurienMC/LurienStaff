@@ -4,6 +4,7 @@ import dev.lurien.staff.lurienStaff.command.*;
 import dev.lurien.staff.lurienStaff.configuration.DataConfig;
 import dev.lurien.staff.lurienStaff.listeners.StaffChatListener;
 import dev.lurien.staff.lurienStaff.listeners.StaffModeListener;
+import dev.lurien.staff.lurienStaff.listeners.VanishListener;
 import dev.lurien.staff.lurienStaff.utils.ServerVersion;
 import lombok.Getter;
 import org.bukkit.Bukkit;
@@ -17,7 +18,6 @@ import java.net.*;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.util.Objects;
 
 public final class LurienStaff extends JavaPlugin {
 
@@ -29,6 +29,45 @@ public final class LurienStaff extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        setVersion();
+
+        data = new DataConfig(this);
+        
+        registerCommands();
+        registerListeners();
+    }
+
+    @Override
+    public void onDisable() {
+
+    }
+
+    @SuppressWarnings("DataFlowIssue")
+    private void registerCommands() {
+        getCommand("staffmode").setExecutor(new StaffModeCommand());
+        getCommand("staffmode").setTabCompleter(new StaffModeCommand());
+        getCommand("staffmodetop").setExecutor(new StaffModeTopCommand());
+        getCommand("staffmodetop").setTabCompleter(new StaffModeTopCommand());
+        getCommand("tphere").setExecutor(new TpHereCommand());
+        getCommand("tphere").setTabCompleter(new TpHereCommand());
+        getCommand("tprandomplayer").setExecutor(new TpRandomPlayerCommand());
+        getCommand("tprandomplayer").setTabCompleter(new TpRandomPlayerCommand());
+        getCommand("stafflist").setExecutor(new StaffListCommand());
+        getCommand("stafflist").setTabCompleter(new StaffListCommand());
+        getCommand("staffchat").setExecutor(new StaffChatCommand());
+        getCommand("staffchat").setTabCompleter(new StaffChatCommand());
+        getCommand("vanish").setExecutor(new VanishCommand());
+        getCommand("vanish").setTabCompleter(new VanishCommand());
+    }
+
+    public void registerListeners(){
+        PluginManager pm = Bukkit.getPluginManager();
+        pm.registerEvents(new StaffModeListener(), this);
+        pm.registerEvents(new StaffChatListener(), this);
+        pm.registerEvents(new VanishListener(), this);
+    }
+
+    private void setVersion() {
         String packageName = Bukkit.getServer().getClass().getPackage().getName();
         String bukkitVersion = Bukkit.getServer().getBukkitVersion().split("-")[0];
 
@@ -51,30 +90,6 @@ public final class LurienStaff extends JavaPlugin {
             default:
                 serverVersion = ServerVersion.valueOf(packageName.replace("org.bukkit.craftbukkit.", ""));
         }
-
-        data = new DataConfig(this);
-
-        Objects.requireNonNull(getCommand("staffmode")).setExecutor(new StaffModeCommand());
-        Objects.requireNonNull(getCommand("staffmode")).setTabCompleter(new StaffModeCommand());
-        Objects.requireNonNull(getCommand("staffmodetop")).setExecutor(new StaffModeTopCommand());
-        Objects.requireNonNull(getCommand("staffmodetop")).setTabCompleter(new StaffModeTopCommand());
-        Objects.requireNonNull(getCommand("tphere")).setExecutor(new TpHereCommand());
-        Objects.requireNonNull(getCommand("tphere")).setTabCompleter(new TpHereCommand());
-        Objects.requireNonNull(getCommand("tprandomplayer")).setExecutor(new TpRandomPlayerCommand());
-        Objects.requireNonNull(getCommand("tprandomplayer")).setTabCompleter(new TpRandomPlayerCommand());
-        Objects.requireNonNull(getCommand("stafflist")).setExecutor(new StaffListCommand());
-        Objects.requireNonNull(getCommand("stafflist")).setTabCompleter(new StaffListCommand());
-        Objects.requireNonNull(getCommand("staffchat")).setExecutor(new StaffChatCommand());
-        Objects.requireNonNull(getCommand("staffchat")).setTabCompleter(new StaffChatCommand());
-
-        PluginManager pm = Bukkit.getPluginManager();
-        pm.registerEvents(new StaffModeListener(), this);
-        pm.registerEvents(new StaffChatListener(), this);
-    }
-
-    @Override
-    public void onDisable() {
-
     }
 
     @SuppressWarnings("unchecked")

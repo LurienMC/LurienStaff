@@ -10,11 +10,11 @@ public class DataConfig extends LurienConfiguration{
     }
 
     public long get(Player staff){
-        return getConfig().getLong(staff.getName(), 0);
+        return getConfig().getLong("StaffModeTotalSeconds."+staff.getName(), 0);
     }
 
     public void set(Player staff, long seconds) {
-        getConfig().set(staff.getName(), seconds);
+        getConfig().set("StaffModeTotalSeconds."+staff.getName(), seconds);
         save();
     }
 }

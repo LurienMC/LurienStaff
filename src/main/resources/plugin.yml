@@ -3,13 +3,20 @@ version: '1.0'
 main: dev.lurien.staff.lurienStaff.LurienStaff
 api-version: '1.21'
 prefix: LurienStaff
+depend:
+  - PlaceholderAPI
+  - ProtocolLib
 authors: [ DamianFarias ]
 description: Staff Management of LurienMC Server
 commands:
   staffmode:
     description: Toggle the activation of staffmode
+    aliases:
+      - staffenserivicio
   staffmodetop:
     description: Show the top staffs in staff mode
+    aliases:
+      - topstaffsenservicio
   tphere:
     description: Teleports a player to your position
     aliases:
@@ -25,3 +32,10 @@ commands:
     description: Chat channel for staff members
     aliases:
       - sc
+  vanish:
+    description: Hide from non staff users
+    aliases:
+      - v
+      - invisibility
+      - invi
+      - desaparecer

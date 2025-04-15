@@ -1,5 +1,6 @@
 package dev.lurien.staff.lurienStaff.command;
 
+import dev.lurien.staff.lurienStaff.managers.VanishManager;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -25,7 +26,7 @@ public class StaffListCommand implements TabExecutor {
         sendMessageWithPrefix(sender, "&e&l! &eLista de Staffs conectados:");
         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
             if(onlinePlayer.hasPermission("lurienstaff.staff")){
-                sendMessageWithPrefix(sender, " &8 - "+ PlaceholderAPI.setPlaceholders(onlinePlayer, "%vault_prefix%")+" "+onlinePlayer.getName()+" &7(&e"+onlinePlayer.getWorld().getName()+"&7)");
+                sendMessageWithPrefix(sender, " &8 - "+ PlaceholderAPI.setPlaceholders(onlinePlayer, "%vault_prefix%")+" "+onlinePlayer.getName()+" "+(VanishManager.isInVanish(onlinePlayer) ? "(&cV) " : "")+"&7(&e"+onlinePlayer.getWorld().getName()+"&7)");
             }
         }
         return true;
