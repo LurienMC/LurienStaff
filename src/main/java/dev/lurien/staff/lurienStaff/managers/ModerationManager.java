@@ -1,6 +1,7 @@
 package dev.lurien.staff.lurienStaff.managers;
 
 import lombok.Getter;
+import org.jetbrains.annotations.NotNull;
 
 import java.text.Normalizer;
 import java.util.ArrayList;
@@ -12,7 +13,11 @@ public class ModerationManager {
     @Getter
     private static final List<String> badWords = new ArrayList<>();
     @Getter
+    private static final List<String> discriminationWords = new ArrayList<>();
+    @Getter
     private static final List<String> bypassBadWords = new ArrayList<>();
+    @Getter
+    private static final List<String> inappropriateBehaviorWords = new ArrayList<>();
 
     public static String removeDiacriticalMarks(String str) {
         String normalize = Normalizer.normalize(str, Normalizer.Form.NFD);
@@ -36,15 +41,38 @@ public class ModerationManager {
             for (String bypass : bypassBadWords) {
                 String normalizedBypass = changeNumbersPerChars(removeDiacriticalMarks(bypass.toLowerCase()));
 
-                if (normalizedBypass.contains(normalizedBadWord) && normalizedMessage.contains(normalizedBypass)) {
-                    isBypassed = true;
-                    break;
-                }
+                isBypassed = normalizedBypass.contains(normalizedBadWord) && normalizedMessage.contains(normalizedBypass);
             }
 
             if (!isBypassed) {
                 return true;
             }
+        }
+
+        return false;
+    }
+
+    public static boolean containsDiscriminationWord(String str) {
+        String normalizedMessage = changeNumbersPerChars(removeDiacriticalMarks(str.toLowerCase()));
+
+        for (String dWord : discriminationWords) {
+            String normalizedDWord = changeNumbersPerChars(removeDiacriticalMarks(dWord.toLowerCase()));
+
+            if (normalizedMessage.contains(normalizedDWord))
+                return true;
+        }
+
+        return false;
+    }
+
+    public static boolean containsInappropriateBehaviorWords(String str) {
+        String normalizedMessage = changeNumbersPerChars(removeDiacriticalMarks(str.toLowerCase()));
+
+        for (String iWord : inappropriateBehaviorWords) {
+            String normalizedIWord = changeNumbersPerChars(removeDiacriticalMarks(iWord.toLowerCase()));
+
+            if (normalizedMessage.contains(normalizedIWord))
+                return true;
         }
 
         return false;

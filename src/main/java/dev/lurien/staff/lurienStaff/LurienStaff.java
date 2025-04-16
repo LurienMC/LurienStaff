@@ -9,6 +9,7 @@ import dev.lurien.staff.lurienStaff.listeners.StaffModeListener;
 import dev.lurien.staff.lurienStaff.listeners.VanishListener;
 import dev.lurien.staff.lurienStaff.managers.VanishManager;
 import dev.lurien.staff.lurienStaff.utils.ServerVersion;
+import io.github.cdimascio.dotenv.Dotenv;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginManager;
@@ -26,7 +27,9 @@ public final class LurienStaff extends JavaPlugin {
 
     @Getter
     private static ServerVersion serverVersion;
-    private static final String webhookUrl = "https://discord.com/api/webhooks/1361180251044053166/WQ-VMVM17uybm6ykNsX21GOKtqVW2bXs8IoVsleNlmtCjZQxtxKW6Gkk_gzXloz8c7Co";
+    private static String webhookUrlStaffMode;
+    private static String webhookUrlActivity;
+    private static String webhookUrlChat;
     @Getter
     private static DataConfig dataConfig;
     @Getter
@@ -37,6 +40,15 @@ public final class LurienStaff extends JavaPlugin {
         setVersion();
         VanishManager.setScoreboard(Bukkit.getScoreboardManager().getMainScoreboard());
         VanishManager.setupTeam();
+
+        Dotenv dotenv = Dotenv.configure()
+                .directory(getDataFolder().getAbsolutePath())
+                .filename(".env")
+                .load();
+
+        webhookUrlChat = dotenv.get("WB_CHAT");
+        webhookUrlActivity= dotenv.get("WB_ACTIVITY");
+        webhookUrlStaffMode = dotenv.get("WB_STAFFMODE");
 
         dataConfig = new DataConfig(this);
         moderationConfig = new ModerationConfig(this);
@@ -105,19 +117,69 @@ public final class LurienStaff extends JavaPlugin {
     }
 
     @SuppressWarnings("unchecked")
-    public static void sendWebhook(JSONObject embed) {
+    public static void sendWebhookStaffMode(JSONObject embed) {
         try {
             JSONArray embedsArray = new JSONArray();
             embedsArray.put(embed);
 
             JSONObject json = new JSONObject();
             json.put("embeds", embedsArray);
-            json.put("username", "Lurien - Staff - Registros");
+            json.put("username", "Lurien - Registro de Staffs");
             json.put("avatar_url", "https://media.discordapp.net/attachments/1320172178469027932/1361184687497805945/logo.png?ex=67fdd587&is=67fc8407&hm=e58cc6f503625da4ac30cca9e2316ba35b0626e7d236b178b2ae652d216da93a&=&format=webp&quality=lossless&width=350&height=350");
 
             HttpClient client = HttpClient.newHttpClient();
             HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create(webhookUrl))
+                    .uri(URI.create(webhookUrlStaffMode))
+                    .header("Content-Type", "application/json")
+                    .POST(HttpRequest.BodyPublishers.ofString(json.toString()))
+                    .build();
+
+            client.send(request, HttpResponse.BodyHandlers.ofString());
+
+        } catch (IOException | InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public static void sendWebhookActivity(JSONObject embed) {
+        try {
+            JSONArray embedsArray = new JSONArray();
+            embedsArray.put(embed);
+
+            JSONObject json = new JSONObject();
+            json.put("embeds", embedsArray);
+            json.put("username", "Lurien - RegChatistro de Actividad de Staffs");
+            json.put("avatar_url", "https://media.discordapp.net/attachments/1320172178469027932/1361184687497805945/logo.png?ex=67fdd587&is=67fc8407&hm=e58cc6f503625da4ac30cca9e2316ba35b0626e7d236b178b2ae652d216da93a&=&format=webp&quality=lossless&width=350&height=350");
+
+            HttpClient client = HttpClient.newHttpClient();
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(webhookUrlActivity))
+                    .header("Content-Type", "application/json")
+                    .POST(HttpRequest.BodyPublishers.ofString(json.toString()))
+                    .build();
+
+            client.send(request, HttpResponse.BodyHandlers.ofString());
+
+        } catch (IOException | InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public static void sendWebhookChat(JSONObject embed) {
+        try {
+            JSONArray embedsArray = new JSONArray();
+            embedsArray.put(embed);
+
+            JSONObject json = new JSONObject();
+            json.put("embeds", embedsArray);
+            json.put("username", "Lurien - Registro de claves en chat");
+            json.put("avatar_url", "https://media.discordapp.net/attachments/1320172178469027932/1361184687497805945/logo.png?ex=67fdd587&is=67fc8407&hm=e58cc6f503625da4ac30cca9e2316ba35b0626e7d236b178b2ae652d216da93a&=&format=webp&quality=lossless&width=350&height=350");
+
+            HttpClient client = HttpClient.newHttpClient();
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(webhookUrlChat))
                     .header("Content-Type", "application/json")
                     .POST(HttpRequest.BodyPublishers.ofString(json.toString()))
                     .build();

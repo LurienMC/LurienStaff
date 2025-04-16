@@ -13,7 +13,8 @@ import org.json.simple.JSONObject;
 import java.util.HashSet;
 import java.util.Set;
 
-import static dev.lurien.staff.lurienStaff.LurienStaff.sendWebhook;
+import static dev.lurien.staff.lurienStaff.LurienStaff.sendWebhookActivity;
+import static dev.lurien.staff.lurienStaff.LurienStaff.sendWebhookStaffMode;
 import static dev.lurien.staff.lurienStaff.utils.MessagesUtils.*;
 
 @SuppressWarnings("unchecked")
@@ -49,7 +50,7 @@ public class VanishManager {
             thumbnail.put("url", "https://visage.surgeplay.com/full/"+p.getName());
             embed.put("thumbnail", thumbnail);
 
-            sendWebhook(embed);
+            sendWebhookActivity(embed);
         } else {
             playersInVanish.remove(p.getName());
             removeGlow(p);
@@ -69,7 +70,7 @@ public class VanishManager {
             thumbnail.put("url", "https://visage.surgeplay.com/full/"+p.getName());
             embed.put("thumbnail", thumbnail);
 
-            sendWebhook(embed);
+            sendWebhookActivity(embed);
         }
     }
 

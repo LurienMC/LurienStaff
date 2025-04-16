@@ -22,6 +22,8 @@ public class VanishListener implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onJoin(PlayerJoinEvent e) {
         Player p = e.getPlayer();
+        p.setGlowing(false);
+
         if(isInVanish(p)){
             if(!p.hasPermission("lurienstaff.vanish")){
                 setVanish(p, false);

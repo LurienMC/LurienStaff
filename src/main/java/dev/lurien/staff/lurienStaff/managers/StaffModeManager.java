@@ -12,7 +12,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static dev.lurien.staff.lurienStaff.LurienStaff.sendWebhook;
+import static dev.lurien.staff.lurienStaff.LurienStaff.sendWebhookStaffMode;
 import static dev.lurien.staff.lurienStaff.utils.MessagesUtils.logAdmins;
 
 public class StaffModeManager {
@@ -43,7 +43,7 @@ public class StaffModeManager {
         footer.put("icon_url", "https://media.discordapp.net/attachments/1320172178469027932/1361184687497805945/logo.png?ex=67fdd587&is=67fc8407&hm=e58cc6f503625da4ac30cca9e2316ba35b0626e7d236b178b2ae652d216da93a&=&format=webp&quality=lossless&width=350&height=350");
         embed.put("footer", footer);
 
-        sendWebhook(embed);
+        sendWebhookStaffMode(embed);
     }
 
     @SuppressWarnings({"SuspiciousMethodCalls", "unchecked"})
@@ -77,7 +77,7 @@ public class StaffModeManager {
         embed.put("footer", footer);
 
         LurienStaff.getDataConfig().set(p, LurienStaff.getDataConfig().get(p)+duration.getSeconds());
-        sendWebhook(embed);
+        sendWebhookStaffMode(embed);
     }
 
     public static Map<String, String> getTopStaffsMode(int limit){
