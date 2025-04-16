@@ -9,6 +9,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -21,7 +22,30 @@ public class ModerationListener implements Listener {
     @EventHandler(priority = EventPriority.MONITOR)
     public void onChat(AsyncPlayerChatEvent e){
         if(!e.isCancelled()){
-            if(ModerationManager.isFlooding(e.getMessage())){
+            if(ModerationManager.isSpam(e.getMessage())){
+                if(StaffChatCommand.staffChatEnable.contains(e.getPlayer().getName())){
+                    for (Player recipient : e.getRecipients()) {
+                        if(recipient.hasPermission("lurienstaff.spam")){
+                            sendMessage(recipient, "#37D7F6&lS#36CAF7&lt#35BDF8&la#34B0F9&lf#33A4FB&lf#3297FC&lC#318AFD&lh#307DFE&la#2F70FF&lt &f» &8(&cSPAM&8) "+ PlaceholderAPI.setPlaceholders(e.getPlayer(), "%vault_prefix%")+" "+e.getPlayer().getName()+" &8» &7"+e.getMessage());
+                        }
+                    }
+                    sendMessage(Bukkit.getConsoleSender(), "#37D7F6&lS#36CAF7&lt#35BDF8&la#34B0F9&lf#33A4FB&lf#3297FC&lC#318AFD&lh#307DFE&la#2F70FF&lt &f» &8(&cSPAM&8) "+ PlaceholderAPI.setPlaceholders(e.getPlayer(), "%vault_prefix%")+" "+e.getPlayer().getName()+" &8» &7"+e.getMessage());
+
+                    e.getRecipients().removeIf(player -> player.hasPermission("lurienstaff.spam"));
+                    sendEmbedSpam(e.getPlayer(), e.getMessage(), "Staff");
+                }else{
+                    for (Player recipient : e.getRecipients()) {
+                        if(recipient.hasPermission("lurienstaff.spam")){
+                            sendMessage(recipient, "&8(&cSPAM&8) "+ PlaceholderAPI.setPlaceholders(e.getPlayer(), "%vault_prefix%")+" "+e.getPlayer().getName()+" &8» &7"+e.getMessage());
+                        }
+                    }
+                    sendMessage(Bukkit.getConsoleSender(), "&8(&cSPAM&8) "+ PlaceholderAPI.setPlaceholders(e.getPlayer(), "%vault_prefix%")+" "+e.getPlayer().getName()+" &8» &7"+e.getMessage());
+
+                    e.getRecipients().removeIf(player -> player.hasPermission("lurienstaff.spam"));
+                    sendEmbedSpam(e.getPlayer(), e.getMessage(), "Global");
+                }
+            }
+            else if(ModerationManager.isFlooding(e.getMessage())){
                 if(StaffChatCommand.staffChatEnable.contains(e.getPlayer().getName())){
                     for (Player recipient : e.getRecipients()) {
                         if(recipient.hasPermission("lurienstaff.flood")){
@@ -44,7 +68,7 @@ public class ModerationListener implements Listener {
                     sendEmbedFlood(e.getPlayer(), e.getMessage(), "Global");
                 }
             }
-            if(ModerationManager.containsBadWord(e.getMessage())){
+            else if(ModerationManager.containsBadWord(e.getMessage())){
                 if(StaffChatCommand.staffChatEnable.contains(e.getPlayer().getName())){
                     for (Player recipient : e.getRecipients()) {
                         if(recipient.hasPermission("lurienstaff.badwords")){
@@ -119,6 +143,27 @@ public class ModerationListener implements Listener {
         JSONObject embed = new JSONObject();
         embed.put("title", "Posible "+type+" encontrado");
         embed.put("color", color);
+
+        JSONObject thumbnail = new JSONObject();
+        thumbnail.put("url", "https://visage.surgeplay.com/full/"+player.getName());
+        embed.put("thumbnail", thumbnail);
+
+        JSONArray fields = getFields(player, message, chat);
+        embed.put("fields", fields);
+
+        JSONObject footer = new JSONObject();
+        footer.put("text", "Created by @octdamfar");
+        footer.put("icon_url", "https://media.discordapp.net/attachments/1320172178469027932/1361184687497805945/logo.png?ex=67fdd587&is=67fc8407&hm=e58cc6f503625da4ac30cca9e2316ba35b0626e7d236b178b2ae652d216da93a&=&format=webp&quality=lossless&width=350&height=350");
+        embed.put("footer", footer);
+
+        sendWebhookChat(embed);
+    }
+
+    @SuppressWarnings("unchecked")
+    private void sendEmbedSpam(Player player, String message, String chat) {
+        JSONObject embed = new JSONObject();
+        embed.put("title", "Spam encontrado");
+        embed.put("color", 0xD3FF6C);
 
         JSONObject thumbnail = new JSONObject();
         thumbnail.put("url", "https://visage.surgeplay.com/full/"+player.getName());

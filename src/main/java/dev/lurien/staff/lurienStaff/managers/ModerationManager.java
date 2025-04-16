@@ -6,6 +6,7 @@ import org.jetbrains.annotations.NotNull;
 import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ModerationManager {
@@ -23,6 +24,15 @@ public class ModerationManager {
     private static final int MAX_WORD_REPEAT = 4;
     private static final int MIN_PATTERN_LENGTH = 2;
     private static final int MAX_PATTERN_REPEAT = 3;
+
+    public static boolean isSpam(String message){
+        String regex = "(https?://)?([\\w.-]+)\\.[a-z]{2,}(\\S*)?";
+
+        Pattern pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
+        Matcher matcher = pattern.matcher(message);
+
+        return matcher.find();
+    }
 
     public static boolean isFlooding(String message) {
         return hasCharFlood(message) || hasWordFlood(message) || hasPatternFlood(message);
