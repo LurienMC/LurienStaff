@@ -36,6 +36,11 @@ public class MessagesUtils {
         Bukkit.broadcastMessage(colorize(message.replace("%prefix%", PREFIX)));
     }
 
+    public static void broadcastPrefix(String message){
+        Bukkit.broadcastMessage(colorize(PREFIX+" "+message));
+
+    }
+
     public static void sendMessage(CommandSender sender, String s) {
         if(sender instanceof Player) PlaceholderAPI.setPlaceholders((Player) sender, s);
         if(s.startsWith("<center>")) s = getCenteredMessage(s.replace("<center>", ""));

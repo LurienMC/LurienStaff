@@ -11,6 +11,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
+import static dev.lurien.staff.lurienStaff.utils.MessagesUtils.filterSuggestions;
 import static dev.lurien.staff.lurienStaff.utils.MessagesUtils.sendMessageWithPrefix;
 
 public class VanishCommand implements TabExecutor {
@@ -59,7 +60,7 @@ public class VanishCommand implements TabExecutor {
     public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String s, @NotNull String @NotNull [] args) {
         if(args.length == 1){
             if(sender.hasPermission("lurienstaff.headstaff"))
-                return Bukkit.getOnlinePlayers().stream().filter(player -> player.hasPermission("lurienstaff.vanish")).map(Player::getName).toList();
+                return filterSuggestions(Bukkit.getOnlinePlayers().stream().filter(player -> player.hasPermission("lurienstaff.vanish")).map(Player::getName).toList(), args[0]);
 
         }
         return List.of();

@@ -13,7 +13,7 @@ import static dev.lurien.staff.lurienStaff.utils.MessagesUtils.colorize;
 @SuppressWarnings("deprecation")
 public class StaffChatListener implements Listener {
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.NORMAL)
     public void onChat(AsyncPlayerChatEvent e){
         Player p = e.getPlayer();
 

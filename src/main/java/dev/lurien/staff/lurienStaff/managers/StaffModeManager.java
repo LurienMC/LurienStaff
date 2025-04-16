@@ -76,12 +76,12 @@ public class StaffModeManager {
         footer.put("icon_url", "https://media.discordapp.net/attachments/1320172178469027932/1361184687497805945/logo.png?ex=67fdd587&is=67fc8407&hm=e58cc6f503625da4ac30cca9e2316ba35b0626e7d236b178b2ae652d216da93a&=&format=webp&quality=lossless&width=350&height=350");
         embed.put("footer", footer);
 
-        LurienStaff.getData().set(p, LurienStaff.getData().get(p)+duration.getSeconds());
+        LurienStaff.getDataConfig().set(p, LurienStaff.getDataConfig().get(p)+duration.getSeconds());
         sendWebhook(embed);
     }
 
     public static Map<String, String> getTopStaffsMode(int limit){
-        ConfigurationSection s = LurienStaff.getData().getConfig();
+        ConfigurationSection s = LurienStaff.getDataConfig().getConfig();
         if(s.getKeys(false).isEmpty()) return new HashMap<>();
 
         Map<String, Long> map = new HashMap<>();

@@ -2,9 +2,12 @@ package dev.lurien.staff.lurienStaff;
 
 import dev.lurien.staff.lurienStaff.command.*;
 import dev.lurien.staff.lurienStaff.configuration.DataConfig;
+import dev.lurien.staff.lurienStaff.configuration.ModerationConfig;
+import dev.lurien.staff.lurienStaff.listeners.ModerationListener;
 import dev.lurien.staff.lurienStaff.listeners.StaffChatListener;
 import dev.lurien.staff.lurienStaff.listeners.StaffModeListener;
 import dev.lurien.staff.lurienStaff.listeners.VanishListener;
+import dev.lurien.staff.lurienStaff.managers.VanishManager;
 import dev.lurien.staff.lurienStaff.utils.ServerVersion;
 import lombok.Getter;
 import org.bukkit.Bukkit;
@@ -25,13 +28,19 @@ public final class LurienStaff extends JavaPlugin {
     private static ServerVersion serverVersion;
     private static final String webhookUrl = "https://discord.com/api/webhooks/1361180251044053166/WQ-VMVM17uybm6ykNsX21GOKtqVW2bXs8IoVsleNlmtCjZQxtxKW6Gkk_gzXloz8c7Co";
     @Getter
-    private static DataConfig data;
+    private static DataConfig dataConfig;
+    @Getter
+    private static ModerationConfig moderationConfig;
 
     @Override
     public void onEnable() {
         setVersion();
+        VanishManager.setScoreboard(Bukkit.getScoreboardManager().getMainScoreboard());
+        VanishManager.setupTeam();
 
-        data = new DataConfig(this);
+        dataConfig = new DataConfig(this);
+        moderationConfig = new ModerationConfig(this);
+        moderationConfig.loadConfig();
         
         registerCommands();
         registerListeners();
@@ -58,6 +67,8 @@ public final class LurienStaff extends JavaPlugin {
         getCommand("staffchat").setTabCompleter(new StaffChatCommand());
         getCommand("vanish").setExecutor(new VanishCommand());
         getCommand("vanish").setTabCompleter(new VanishCommand());
+        getCommand("staffadmin").setExecutor(new StaffAdminCommand());
+        getCommand("staffadmin").setTabCompleter(new StaffAdminCommand());
     }
 
     public void registerListeners(){
@@ -65,6 +76,7 @@ public final class LurienStaff extends JavaPlugin {
         pm.registerEvents(new StaffModeListener(), this);
         pm.registerEvents(new StaffChatListener(), this);
         pm.registerEvents(new VanishListener(), this);
+        pm.registerEvents(new ModerationListener(), this);
     }
 
     private void setVersion() {

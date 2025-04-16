@@ -39,3 +39,7 @@ commands:
       - invisibility
       - invi
       - desaparecer
+  staffadmin:
+    description: Head Staffs commands
+    aliases:
+      - sa
