@@ -44,3 +44,8 @@ commands:
     description: Head Staffs commands
     aliases:
       - sa
+  warn:
+    description: Warns a player with a reason
+    aliases:
+      - w
+      - advertir

@@ -32,13 +32,17 @@ public class MessagesUtils {
         }
     }
 
-    public static void broadcast(String message){
-        Bukkit.broadcastMessage(colorize(message.replace("%prefix%", PREFIX)));
+    public static void broadcast(String... message){
+        for(String s : message){
+            for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+                sendMessage(onlinePlayer, s);
+            }
+            sendMessage(Bukkit.getConsoleSender(), s);
+        }
     }
 
     public static void broadcastPrefix(String message){
         Bukkit.broadcastMessage(colorize(PREFIX+" "+message));
-
     }
 
     public static void sendMessage(CommandSender sender, String s) {

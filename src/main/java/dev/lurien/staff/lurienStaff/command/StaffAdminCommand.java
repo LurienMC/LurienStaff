@@ -15,7 +15,7 @@ import static dev.lurien.staff.lurienStaff.utils.MessagesUtils.sendMessageWithPr
 public class StaffAdminCommand implements TabExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String s, @NotNull String @NotNull [] args) {
-        if(!sender.hasPermission("lurienstaff.staffadmin")){
+        if(!sender.hasPermission("lurienstaff.admin")){
             sendMessageWithPrefix(sender, "&c⚠ No tienes permisos.");
             return false;
         }

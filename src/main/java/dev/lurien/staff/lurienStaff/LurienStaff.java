@@ -9,6 +9,7 @@ import dev.lurien.staff.lurienStaff.listeners.StaffChatListener;
 import dev.lurien.staff.lurienStaff.listeners.StaffModeListener;
 import dev.lurien.staff.lurienStaff.listeners.VanishListener;
 import dev.lurien.staff.lurienStaff.managers.VanishManager;
+import dev.lurien.staff.lurienStaff.managers.WarnsManager;
 import dev.lurien.staff.lurienStaff.utils.ServerVersion;
 import io.github.cdimascio.dotenv.Dotenv;
 import lombok.Getter;
@@ -26,7 +27,7 @@ public final class LurienStaff extends JavaPlugin {
     private static ServerVersion serverVersion;
     @Getter
     @Setter
-    private static NewsChannel staffModeChannel, activityChannel, chatChannel;
+    private static NewsChannel staffModeChannel, activityChannel, chatChannel, moderationLogsChannel;
     @Getter
     private static DataConfig dataConfig;
     @Getter
@@ -46,6 +47,7 @@ public final class LurienStaff extends JavaPlugin {
         StaffChatListener.webhook = dotenv.get("STAFF_C_WH");
 
         dataConfig = new DataConfig(this);
+        WarnsManager.load();
         moderationConfig = new ModerationConfig(this);
         moderationConfig.loadConfig();
         
@@ -55,7 +57,7 @@ public final class LurienStaff extends JavaPlugin {
 
     @Override
     public void onDisable() {
-
+        WarnsManager.saveAll();
     }
 
 
@@ -77,6 +79,8 @@ public final class LurienStaff extends JavaPlugin {
         getCommand("vanish").setTabCompleter(new VanishCommand());
         getCommand("staffadmin").setExecutor(new StaffAdminCommand());
         getCommand("staffadmin").setTabCompleter(new StaffAdminCommand());
+        getCommand("warn").setExecutor(new WarnCommand());
+        getCommand("warn").setTabCompleter(new WarnCommand());
     }
 
     public void registerListeners(){

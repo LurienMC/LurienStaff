@@ -1,5 +1,6 @@
 package dev.lurien.staff.lurienStaff.configuration;
 
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
@@ -16,5 +17,9 @@ public class DataConfig extends LurienConfiguration{
     public void set(Player staff, long seconds) {
         getConfig().set("StaffModeTotalSeconds."+staff.getName(), seconds);
         save();
+    }
+
+    public ConfigurationSection getWarnsSection() {
+        return getConfig().isConfigurationSection("advertencias") ? getConfig().getConfigurationSection("advertencias") : getConfig().createSection("advertencias");
     }
 }
