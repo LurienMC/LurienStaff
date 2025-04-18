@@ -9,7 +9,7 @@ public class StaffModeListener implements Listener {
 
     @EventHandler
     public void onQuit(PlayerQuitEvent e){
-        if(e.getPlayer().hasPermission("lurienstaff.staffmode") && StaffModeManager.isEnabled(e.getPlayer())){
+        if(StaffModeManager.isEnabled(e.getPlayer())){
             StaffModeManager.setDisable(e.getPlayer(), true);
         }
     }

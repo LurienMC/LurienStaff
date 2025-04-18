@@ -1,7 +1,6 @@
 package dev.lurien.staff.lurienStaff.managers;
 
 import lombok.Getter;
-import org.jetbrains.annotations.NotNull;
 
 import java.text.Normalizer;
 import java.util.ArrayList;

@@ -1,20 +1,20 @@
 package dev.lurien.staff.lurienStaff.managers;
 
+import dev.lurien.bot.LurienBot;
 import dev.lurien.staff.lurienStaff.LurienStaff;
 import lombok.Setter;
 import me.clip.placeholderapi.PlaceholderAPI;
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
-import org.json.simple.JSONObject;
 
 import java.util.HashSet;
 import java.util.Set;
 
 import static dev.lurien.staff.lurienStaff.LurienStaff.sendWebhookActivity;
-import static dev.lurien.staff.lurienStaff.LurienStaff.sendWebhookStaffMode;
 import static dev.lurien.staff.lurienStaff.utils.MessagesUtils.*;
 
 @SuppressWarnings("unchecked")
@@ -41,14 +41,11 @@ public class VanishManager {
 
             logAdmins("&c&l! &fEl staff &c"+p.getName()+"&f está en vanish.", p);
 
-            JSONObject embed = new JSONObject();
-            embed.put("title", p.getName()+" está en vanish");
-            embed.put("color", 0xFC3232);
-            embed.put("description", "\n\n__Staff de LurienMC__");
-
-            JSONObject thumbnail = new JSONObject();
-            thumbnail.put("url", "https://visage.surgeplay.com/full/"+p.getName());
-            embed.put("thumbnail", thumbnail);
+            EmbedBuilder embed = new EmbedBuilder().setTitle(p.getName()+" ya no está en vanish")
+                    .setColor(0xFC3232)
+                    .setDescription("\n\n__Staff de LurienMC__")
+                    .setThumbnail("https://visage.surgeplay.com/full/"+p.getName())
+                    .setFooter("Created by @octdamfar", LurienBot.getGuild().getIconUrl());
 
             sendWebhookActivity(embed);
         } else {
@@ -61,14 +58,11 @@ public class VanishManager {
 
             logAdmins("&c&l! &fEl staff &c"+p.getName()+"&f ya no está en vanish.", p);
 
-            JSONObject embed = new JSONObject();
-            embed.put("title", p.getName()+" ya no está en vanish");
-            embed.put("color", 0xDB2727);
-            embed.put("description", "\n\n__Staff de LurienMC__");
-
-            JSONObject thumbnail = new JSONObject();
-            thumbnail.put("url", "https://visage.surgeplay.com/full/"+p.getName());
-            embed.put("thumbnail", thumbnail);
+            EmbedBuilder embed = new EmbedBuilder().setTitle(p.getName()+" ya no está en vanish")
+                    .setColor(0xDB2727)
+                    .setDescription("\n\n__Staff de LurienMC__")
+                    .setThumbnail("https://visage.surgeplay.com/full/"+p.getName())
+                    .setFooter("Created by @octdamfar", LurienBot.getGuild().getIconUrl());
 
             sendWebhookActivity(embed);
         }

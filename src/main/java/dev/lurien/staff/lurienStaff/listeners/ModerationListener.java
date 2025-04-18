@@ -1,17 +1,20 @@
 package dev.lurien.staff.lurienStaff.listeners;
 
+import dev.lurien.bot.LurienBot;
 import dev.lurien.staff.lurienStaff.command.StaffChatCommand;
 import dev.lurien.staff.lurienStaff.managers.ModerationManager;
 import me.clip.placeholderapi.PlaceholderAPI;
+import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.MessageEmbed;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
-import org.jetbrains.annotations.NotNull;
-import org.json.JSONArray;
-import org.json.simple.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static dev.lurien.staff.lurienStaff.LurienStaff.sendWebhookChat;
 import static dev.lurien.staff.lurienStaff.utils.MessagesUtils.sendMessage;
@@ -138,91 +141,54 @@ public class ModerationListener implements Listener {
         }
     }
 
-    @SuppressWarnings("unchecked")
     private void sendEmbed(Player player, String message, String chat, String type, int color) {
-        JSONObject embed = new JSONObject();
-        embed.put("title", "Posible "+type+" encontrado");
-        embed.put("color", color);
+        EmbedBuilder embed = new EmbedBuilder().setTitle("Posible "+type+" encontrado")
+                .setColor(color)
+                .setThumbnail("https://visage.surgeplay.com/full/"+player.getName())
+                .setFooter("Created by @octdamfar", LurienBot.getGuild().getIconUrl());
 
-        JSONObject thumbnail = new JSONObject();
-        thumbnail.put("url", "https://visage.surgeplay.com/full/"+player.getName());
-        embed.put("thumbnail", thumbnail);
-
-        JSONArray fields = getFields(player, message, chat);
-        embed.put("fields", fields);
-
-        JSONObject footer = new JSONObject();
-        footer.put("text", "Created by @octdamfar");
-        footer.put("icon_url", "https://media.discordapp.net/attachments/1320172178469027932/1361184687497805945/logo.png?ex=67fdd587&is=67fc8407&hm=e58cc6f503625da4ac30cca9e2316ba35b0626e7d236b178b2ae652d216da93a&=&format=webp&quality=lossless&width=350&height=350");
-        embed.put("footer", footer);
+        for (MessageEmbed.Field field : getFields(player, message, chat)) {
+            embed.addField(field);
+        }
 
         sendWebhookChat(embed);
     }
 
-    @SuppressWarnings("unchecked")
     private void sendEmbedSpam(Player player, String message, String chat) {
-        JSONObject embed = new JSONObject();
-        embed.put("title", "Spam encontrado");
-        embed.put("color", 0xD3FF6C);
+        EmbedBuilder embed = new EmbedBuilder().setTitle("Spam encontrado")
+                .setColor(0xD3FF6C)
+                .setThumbnail("https://visage.surgeplay.com/full/"+player.getName())
+                .setFooter("Created by @octdamfar", LurienBot.getGuild().getIconUrl());
 
-        JSONObject thumbnail = new JSONObject();
-        thumbnail.put("url", "https://visage.surgeplay.com/full/"+player.getName());
-        embed.put("thumbnail", thumbnail);
-
-        JSONArray fields = getFields(player, message, chat);
-        embed.put("fields", fields);
-
-        JSONObject footer = new JSONObject();
-        footer.put("text", "Created by @octdamfar");
-        footer.put("icon_url", "https://media.discordapp.net/attachments/1320172178469027932/1361184687497805945/logo.png?ex=67fdd587&is=67fc8407&hm=e58cc6f503625da4ac30cca9e2316ba35b0626e7d236b178b2ae652d216da93a&=&format=webp&quality=lossless&width=350&height=350");
-        embed.put("footer", footer);
+        for (MessageEmbed.Field field : getFields(player, message, chat)) {
+            embed.addField(field);
+        }
 
         sendWebhookChat(embed);
     }
 
-    @SuppressWarnings("unchecked")
     private void sendEmbedFlood(Player player, String message, String chat) {
-        JSONObject embed = new JSONObject();
-        embed.put("title", "Flood encontrado");
-        embed.put("color", 0xFF1414);
+        EmbedBuilder embed = new EmbedBuilder().setTitle("Flood encontrado")
+                .setColor(0xFF1414)
+                .setThumbnail("https://visage.surgeplay.com/full/"+player.getName())
+                .setFooter("Created by @octdamfar", LurienBot.getGuild().getIconUrl());
 
-        JSONObject thumbnail = new JSONObject();
-        thumbnail.put("url", "https://visage.surgeplay.com/full/"+player.getName());
-        embed.put("thumbnail", thumbnail);
-
-        JSONArray fields = getFields(player, message, chat);
-        embed.put("fields", fields);
-
-        JSONObject footer = new JSONObject();
-        footer.put("text", "Created by @octdamfar");
-        footer.put("icon_url", "https://media.discordapp.net/attachments/1320172178469027932/1361184687497805945/logo.png?ex=67fdd587&is=67fc8407&hm=e58cc6f503625da4ac30cca9e2316ba35b0626e7d236b178b2ae652d216da93a&=&format=webp&quality=lossless&width=350&height=350");
-        embed.put("footer", footer);
+        for (MessageEmbed.Field field : getFields(player, message, chat)) {
+            embed.addField(field);
+        }
 
         sendWebhookChat(embed);
     }
 
-    @SuppressWarnings("unchecked")
-    private static JSONArray getFields(Player player, String message, String chat) {
-        JSONArray fields = new JSONArray();
+    private static List<MessageEmbed.Field> getFields(Player player, String message, String chat) {
+        List<MessageEmbed.Field> fields = new ArrayList<>();
 
-        JSONObject field1 = new JSONObject();
-        field1.put("name", "Jugador");
-        field1.put("value", player.getName());
-        field1.put("inline", true);
-
-        JSONObject field2 = new JSONObject();
-        field2.put("name", "Chat del mensaje");
-        field2.put("value", chat);
-        field2.put("inline", true);
-
-        JSONObject field3 = new JSONObject();
-        field3.put("name", "Mensaje completo");
-        field3.put("value", message);
-        field3.put("inline", false);
-
-        fields.put(field1);
-        fields.put(field2);
-        fields.put(field3);
+        MessageEmbed.Field field1 = new MessageEmbed.Field("Jugador", player.getName(), true);
+        MessageEmbed.Field field2 = new MessageEmbed.Field("Chat", chat, true);
+        MessageEmbed.Field field3 = new MessageEmbed.Field("Mensaje", message, false);
+        fields.add(field1);
+        fields.add(field2);
+        fields.add(field3);
         return fields;
     }
 }

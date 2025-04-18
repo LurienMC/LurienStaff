@@ -6,6 +6,7 @@ prefix: LurienStaff
 depend:
   - PlaceholderAPI
   - ProtocolLib
+  - LurienBot
 authors: [ DamianFarias ]
 description: Staff Management of LurienMC Server
 commands:
