@@ -4,12 +4,15 @@ import dev.lurien.staff.lurienStaff.LurienStaff;
 import dev.lurien.staff.lurienStaff.model.Warn;
 import dev.lurien.staff.lurienStaff.model.WarnReason;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
@@ -26,7 +29,7 @@ public class WarnsManager {
             assert s != null;
             for (String sKey : s.getKeys(false)) {
                 String reason = s.getString(sKey+".razón", "Ninguna"), staff = s.getString(sKey+".staff", "Luriencito");
-                warns.add(new Warn(op, reason, WarnReason.getWarnByName(reason), staff));
+                warns.add(new Warn(op, UUID.fromString(Objects.requireNonNull(s.getString(sKey + ".id"))), reason, WarnReason.getWarnByName(reason), staff));
             }
         }
     }
@@ -39,6 +42,7 @@ public class WarnsManager {
             for (Warn warn : getPlayerWarns(player)) {
                 s.set(i+".razón", warn.getReason() == null ? "Ninguna" : warn.getReason());
                 s.set(i+".staff", warn.getStaff() == null ? "Luriencito" : warn.getStaff());
+                s.set(i+".id", warn.getId().toString());
                 i++;
             }
             LurienStaff.getDataConfig().save();
@@ -70,29 +74,44 @@ public class WarnsManager {
     }
 
     public static void warn(OfflinePlayer player, @NotNull CommandSender staff, String reason) {
-        Warn warn = new Warn(player, reason, WarnReason.getWarnByName(reason), (staff instanceof Player ? staff.getName() : "Luriencito"));
+        Warn warn = new Warn(player, UUID.randomUUID(), reason, WarnReason.getWarnByName(reason), (staff instanceof Player ? staff.getName() : "Luriencito"));
 
         broadcast(
-                "#f57def&l================[#f5000c&lX#f57def]================",
+                "<center>#f57def=====================[#f5000c&lX#f57def]=====================",
                 " ",
-                "                    #f51d7b&lADVERTENCIA",
+                "<center>#f51d7b&lADVERTENCIA",
                 " ",
-                "              #b000e6&lUsuario: &f"+player.getName(),
-                "              #b000e6&lStaff: &f"+(staff instanceof Player ? staff.getName() : "Luriencito"),
-                "              #b000e6&lRazón: &f"+reason+" ("+(getWarns(player, reason)+1)+(WarnReason.getWarnByName(reason) == null ? ")" : "/"+Objects.requireNonNull(WarnReason.getWarnByName(reason)).maxWarnings+")"),
+                "                   #b000e6&lUsuario: &f" + player.getName(),
+                "                   #b000e6&lStaff: &f" + (staff instanceof Player ? staff.getName() : "Luriencito"),
+                "                   #b000e6&lRazón: &f" + reason + " (" + (getWarns(player, reason) + 1) + (WarnReason.getWarnByName(reason) == null ? ")" : "/" + Objects.requireNonNull(WarnReason.getWarnByName(reason)).maxWarnings + ")"),
                 " ",
-                "#f57def&l==================================");
+                "<center>#f57def&l======================================================");
 
         warns.add(warn);
         save(player.getName());
 
         EmbedBuilder eb = new EmbedBuilder()
                 .setColor(0xe67935)
-                .setFooter("por "+(staff instanceof Player ? staff.getName() : "Luriencito"))
-                .setDescription("***"+player.getName()+" fue advertido.*** | "+reason+" ("+getWarns(player, reason)+(WarnReason.getWarnByName(reason) == null ? ")" : "/"+Objects.requireNonNull(WarnReason.getWarnByName(reason)).maxWarnings+")"));
+                .setDescription("***" + player.getName() + " fue advertido.*** | " + reason + " (" + getWarns(player, reason) + (WarnReason.getWarnByName(reason) == null ? ")" : "/" + Objects.requireNonNull(WarnReason.getWarnByName(reason)).maxWarnings + ")"));
+
+
+        EmbedBuilder eb2 = new EmbedBuilder()
+                .setColor(0xff0000)
+                .setTitle("Un jugador ha sido advertido")
+                .addField("Jugador", Objects.requireNonNull(player.getName()), true)
+                .addField("Staff", (staff instanceof Player ? staff.getName() : "Consola (interpretada como Luriencito IG)"), false)
+                .addField("Razón", reason, true)
+                .addField("Advertencias", getWarns(player, reason)+(WarnReason.getWarnByName(reason) == null ? ")" : "/"+Objects.requireNonNull(WarnReason.getWarnByName(reason)).maxWarnings), true)
+                .setFooter("Created by @octdamfar")
+                .setThumbnail("https://visage.surgeplay.com/full/"+player.getName());
 
         LurienStaff.getModerationLogsChannel().sendMessageEmbeds(eb.build()).queue();
+        LurienStaff.getActivityChannel().sendMessageEmbeds(eb2.build())
+                .setActionRow(Button.danger("dw;"+warn.getId(), "Quitar advertencia"),
+                        Button.primary("crw;"+warn.getId(), "Cambiar Razón")).queue();
     }
+
+
 
     private static int getWarns(OfflinePlayer player, String reason) {
         int i = 0;
@@ -102,5 +121,42 @@ public class WarnsManager {
             }
         }
         return i;
+    }
+
+    public static Warn getWarnById(UUID id) {
+        return warns.stream().filter(warn -> warn.getId().equals(id)).findAny().orElse(null);
+    }
+
+    public static void removeWarn(Warn warn, Member member) {
+        EmbedBuilder eb = new EmbedBuilder()
+                .setColor(0xe67935)
+                .setDescription("***Una advertencia de " + warn.getPlayer().getName() + " por " + warn.getReason() + " fue removida.***");
+
+        LurienStaff.getModerationLogsChannel().sendMessageEmbeds(eb.build()).queue();
+
+        broadcast(
+                "<center>#f57def=====================[#f5000c&lX#f57def]=====================",
+                " ",
+                "<center>#f51d7b&lADVERTENCIA REMOVIDA",
+                " ",
+                "                   #b000e6&lUsuario: &f" + warn.getPlayer().getName(),
+                "                   #b000e6&lRazón: &f" + warn.getReason() + " (" + (getWarns(warn.getPlayer(), warn.getReason()) + 1) + (WarnReason.getWarnByName(warn.getReason()) == null ? ")" : "/" + Objects.requireNonNull(WarnReason.getWarnByName(warn.getReason())).maxWarnings + ")"),
+                "                   #b000e6&lAdvertido por: &f" + warn.getStaff(),
+                "                   #b000e6&lRemovido por: &f" + member.getEffectiveName()+" (desde Discord)",
+                " ",
+                "<center>#f57def&l======================================================");
+        warns.remove(warn);
+        save(warn.getPlayer().getName());
+
+        EmbedBuilder eb2 = new EmbedBuilder()
+                .setColor(0xff0000)
+                .setTitle("Una advertencia fue removida")
+                .addField("Reportado", Objects.requireNonNull(warn.getPlayer().getName()), true)
+                .addField("Quien advirtió", !warn.getStaff().equals("Luriencito") ? warn.getStaff() : "Consola (interpretada como Luriencito IG)", false)
+                .addField("Quien removió", member.getAsMention(), false)
+                .addField("Razón", warn.getReason(), true)
+                .setFooter("Created by @octdamfar")
+                .setThumbnail("https://visage.surgeplay.com/full/"+warn.getPlayer().getName());
+        LurienStaff.sendWebhookActivity(eb2);
     }
 }

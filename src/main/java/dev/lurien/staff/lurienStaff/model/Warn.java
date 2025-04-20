@@ -7,12 +7,15 @@ import org.bukkit.OfflinePlayer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.UUID;
+
 @Data
 @AllArgsConstructor
 public class Warn {
 
     @NotNull
     private final OfflinePlayer player;
+    private UUID id;
     private String reason;
     @Nullable
     private WarnReason warnReason;
