@@ -12,7 +12,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
@@ -74,6 +73,7 @@ public class WarnsManager {
     }
 
     public static void warn(OfflinePlayer player, @NotNull CommandSender staff, String reason) {
+        reason = WarnReason.capitalizeEveryWord(reason);
         Warn warn = new Warn(player, UUID.randomUUID(), reason, WarnReason.getWarnByName(reason), (staff instanceof Player ? staff.getName() : "Luriencito"));
 
         broadcast(
@@ -111,7 +111,44 @@ public class WarnsManager {
                         Button.primary("crw;"+warn.getId(), "Cambiar Razón")).queue();
     }
 
+    public static void changeReason(Warn warn, Member member, String newReason) {
+        newReason = WarnReason.capitalizeEveryWord(newReason);
 
+        broadcast(
+                "<center>#f57def=====================[#f5000c&lX#f57def]=====================",
+                " ",
+                "<center>#f51d7b&lCAMBIO DE RAZÓN #f51d7b(Advertencia)",
+                " ",
+                "                   #b000e6&lUsuario: &f" + warn.getPlayer().getName(),
+                "                   #b000e6&lAdvertido por: &f" + warn.getStaff(),
+                "                   #b000e6&lRazón: &f&m" + warn.getReason() + " (" + (getWarns(warn.getPlayer(), warn.getReason())) + (WarnReason.getWarnByName(warn.getReason()) == null ? ")" : "/" + Objects.requireNonNull(WarnReason.getWarnByName(warn.getReason())).maxWarnings + ")&f -> "+ newReason + " (" + ((getWarns(warn.getPlayer(), newReason)) + 1)) + (WarnReason.getWarnByName(newReason) == null ? ")" : "/" + Objects.requireNonNull(WarnReason.getWarnByName(newReason)).maxWarnings + ")"),
+                "                   #b000e6&lCambiado por: &f" + member.getEffectiveName() + " (desde Discord)",
+                " ",
+                "<center>#f57def&l======================================================");
+
+        EmbedBuilder eb = new EmbedBuilder()
+                .setColor(0xe67935)
+                .setDescription("***Una advertencia de " + warn.getPlayer().getName() + " fue cambiada de razón.*** | " + warn.getReason()+ " -> "+newReason);
+
+        EmbedBuilder eb2 = new EmbedBuilder()
+                .setColor(0xff0000)
+                .setTitle("Razón cambiada en una advertencia")
+                .addField("Jugador", Objects.requireNonNull(warn.getPlayer().getName()), true)
+                .addField("Quién advirtió", !warn.getStaff().equals("Luriencito") ? warn.getStaff() : "Consola (interpretada como Luriencito IG)", false)
+                .addField("Quién cambió", member.getAsMention(), false)
+                .addField("Razón", warn.getReason()+" -> "+newReason, true)
+                .setFooter("Created by @octdamfar")
+                .setThumbnail("https://visage.surgeplay.com/full/"+warn.getPlayer().getName());
+
+        warn.setReason(newReason);
+        warn.setWarnReason(WarnReason.getWarnByName(newReason));
+        save(warn.getPlayer().getName());
+
+        LurienStaff.getModerationLogsChannel().sendMessageEmbeds(eb.build()).queue();
+        LurienStaff.getActivityChannel().sendMessageEmbeds(eb2.build())
+                .setActionRow(Button.danger("dw;"+warn.getId(), "Quitar advertencia"),
+                        Button.primary("crw;"+warn.getId(), "Cambiar Razón")).queue();
+    }
 
     private static int getWarns(OfflinePlayer player, String reason) {
         int i = 0;
