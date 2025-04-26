@@ -49,3 +49,7 @@ commands:
     aliases:
       - w
       - advertir
+  warns:
+    description: Show your/other players warnings
+    aliases:
+      - advertencias

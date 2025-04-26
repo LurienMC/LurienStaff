@@ -7,6 +7,7 @@ import org.bukkit.OfflinePlayer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Data
@@ -19,6 +20,7 @@ public class Warn {
     private String reason;
     @Nullable
     private WarnReason warnReason;
+    private LocalDateTime date;
 
     public boolean isStaffPlayer() {
         return Bukkit.getOfflinePlayer(staff).hasPlayedBefore();

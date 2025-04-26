@@ -13,6 +13,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 import static dev.lurien.staff.lurienStaff.utils.MessagesUtils.broadcast;
@@ -28,7 +29,9 @@ public class WarnsManager {
             assert s != null;
             for (String sKey : s.getKeys(false)) {
                 String reason = s.getString(sKey+".razón", "Ninguna"), staff = s.getString(sKey+".staff", "Luriencito");
-                warns.add(new Warn(op, UUID.fromString(Objects.requireNonNull(s.getString(sKey + ".id"))), reason, WarnReason.getWarnByName(reason), staff));
+                String fechaStr = s.getString(sKey+".fecha");
+                LocalDateTime fecha = fechaStr != null ? LocalDateTime.parse(fechaStr) : LocalDateTime.now(); // fallback por compatibilidad
+                warns.add(new Warn(op, UUID.fromString(Objects.requireNonNull(s.getString(sKey + ".id"))), reason, WarnReason.getWarnByName(reason), fecha, staff));
             }
         }
     }
@@ -42,6 +45,7 @@ public class WarnsManager {
                 s.set(i+".razón", warn.getReason() == null ? "Ninguna" : warn.getReason());
                 s.set(i+".staff", warn.getStaff() == null ? "Luriencito" : warn.getStaff());
                 s.set(i+".id", warn.getId().toString());
+                s.set(i+".fecha", warn.getDate().toString());
                 i++;
             }
             LurienStaff.getDataConfig().save();
@@ -64,17 +68,17 @@ public class WarnsManager {
         return new ArrayList<>(names);
     }
 
-    private static List<Warn> getPlayerWarns(String player) {
+    public static List<Warn> getPlayerWarns(String player) {
         return warns.stream().filter(warn -> warn.getPlayer().getName() != null && warn.getPlayer().getName().equals(player)).toList();
     }
 
-    private static boolean hasWarns(String player) {
+    public static boolean hasWarns(String player) {
         return warns.stream().anyMatch(warn -> warn.getPlayer().getName() != null && warn.getPlayer().getName().equals(player));
     }
 
     public static void warn(OfflinePlayer player, @NotNull CommandSender staff, String reason) {
         reason = WarnReason.capitalizeEveryWord(reason);
-        Warn warn = new Warn(player, UUID.randomUUID(), reason, WarnReason.getWarnByName(reason), (staff instanceof Player ? staff.getName() : "Luriencito"));
+        Warn warn = new Warn(player, UUID.randomUUID(), reason, WarnReason.getWarnByName(reason), LocalDateTime.now(), (staff instanceof Player ? staff.getName() : "Luriencito"));
 
         broadcast(
                 "<center>#f57def=====================[#f5000c&lX#f57def]=====================",
