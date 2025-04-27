@@ -83,6 +83,8 @@ public final class LurienStaff extends JavaPlugin {
         getCommand("warn").setTabCompleter(new WarnCommand());
         getCommand("warns").setExecutor(new WarnsCommand());
         getCommand("warns").setTabCompleter(new WarnsCommand());
+        getCommand("delwarn").setExecutor(new DeleteWarnCommand());
+        getCommand("delwarn").setTabCompleter(new DeleteWarnCommand());
     }
 
     public void registerListeners(){

@@ -9,7 +9,6 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
-import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -25,7 +24,6 @@ public class WarnsCommand implements TabExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String s, @NotNull String @NotNull [] args) {
         if (args.length == 0) {
-            // Mostrar los warns del propio jugador
             if (!WarnsManager.hasWarns(sender.getName())) {
                 sendMessageWithPrefix(sender, "&6&l! &6No tienes ninguna advertencia.");
                 return true;
@@ -36,7 +34,7 @@ public class WarnsCommand implements TabExecutor {
 
         } else if (args.length == 1) {
             if (!sender.hasPermission("lurienstaff.warns.others")) {
-                sendMessageWithPrefix(sender, "&cNo tienes permiso para ver advertencias de otros jugadores.");
+                sendMessageWithPrefix(sender, "&c⚠ No tienes permiso de ver advertencias de otros usuarios.");
                 return true;
             }
 
@@ -62,6 +60,7 @@ public class WarnsCommand implements TabExecutor {
         playerWarns.sort(Comparator.comparing(Warn::getDate));
         
         sendMessageWithPrefix(sender, (self ? "&e&l! &fTus advertencias:" : "&e&l! &fAdvertencias de &e" + targetName + "&f:"));
+        int i = 0;
         for (Warn warn : playerWarns) {
             String staff = warn.getStaff();
             String reason = warn.getReason();
@@ -74,7 +73,7 @@ public class WarnsCommand implements TabExecutor {
 
             String fecha = FORMATTER.format(warn.getDate());
 
-            sendMessageWithPrefix(sender, "&fStaff: &e" + staff + " &f- Fecha: &a" + fecha + " &f- Razón: &b" + prettyReason + " &7(" + count + "/" + max + ")");
+            sendMessageWithPrefix(sender, "&fID: &c#"+i+" &fStaff: &e" + staff + " &f- Fecha: &a" + fecha + " &f- Razón: &b" + prettyReason + " &7(" + count + "/" + max + ")");
         }
     }
 

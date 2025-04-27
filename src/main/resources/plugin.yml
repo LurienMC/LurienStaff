@@ -53,3 +53,9 @@ commands:
     description: Show your/other players warnings
     aliases:
       - advertencias
+  delwarn:
+    description: Delete a player warn
+    aliases:
+      - borraradvertencia
+      - deletewarn
+      - dw

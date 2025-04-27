@@ -9,6 +9,7 @@ import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -195,6 +196,34 @@ public class WarnsManager {
                 .addField("Reportado", Objects.requireNonNull(warn.getPlayer().getName()), true)
                 .addField("Quien advirtió", !warn.getStaff().equals("Luriencito") ? warn.getStaff() : "Consola (interpretada como Luriencito IG)", false)
                 .addField("Quien removió", member.getAsMention(), false)
+                .addField("Razón", warn.getReason(), true)
+                .setFooter("Created by @octdamfar")
+                .setThumbnail("https://visage.surgeplay.com/full/"+warn.getPlayer().getName());
+        LurienStaff.sendWebhookActivity(eb2);
+    }
+
+    public static void removeWarn(Warn warn, @NotNull CommandSender sender) {
+        broadcast(
+                "<center>#f57def=====================[#f5000c&lX#f57def]=====================",
+                " ",
+                "<center>#f51d7b&lADVERTENCIA REMOVIDA",
+                " ",
+                "                   #b000e6&lUsuario: &f" + warn.getPlayer().getName(),
+                "                   #b000e6&lRazón: &f" + warn.getReason() + " (" + (getWarns(warn.getPlayer(), warn.getReason()) + 1) + (WarnReason.getWarnByName(warn.getReason()) == null ? ")" : "/" + Objects.requireNonNull(WarnReason.getWarnByName(warn.getReason())).maxWarnings + ")"),
+                "                   #b000e6&lAdvertido por: &f" + warn.getStaff(),
+                "                   #b000e6&lRemovido por: &f" + (sender instanceof Player ? sender.getName() : "Luriencito"),
+                " ",
+                "<center>#f57def&l======================================================");
+
+        warns.remove(warn);
+        save(warn.getPlayer().getName());
+
+        EmbedBuilder eb2 = new EmbedBuilder()
+                .setColor(0xff0000)
+                .setTitle("Una advertencia fue removida")
+                .addField("Reportado", Objects.requireNonNull(warn.getPlayer().getName()), true)
+                .addField("Quien advirtió", !warn.getStaff().equals("Luriencito") ? warn.getStaff() : "Consola (interpretada como Luriencito IG)", false)
+                .addField("Quien removió", sender instanceof ConsoleCommandSender ? "Consola (interpretada como Luriencito IG)" : sender.getName(), false)
                 .addField("Razón", warn.getReason(), true)
                 .setFooter("Created by @octdamfar")
                 .setThumbnail("https://visage.surgeplay.com/full/"+warn.getPlayer().getName());
