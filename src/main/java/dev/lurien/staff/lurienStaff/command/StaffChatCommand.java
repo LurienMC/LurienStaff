@@ -56,11 +56,11 @@ public class StaffChatCommand implements TabExecutor {
         String message = sb.toString().trim();
         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
             if(onlinePlayer.hasPermission("lurienstaff.staffchat")){
-                sendMessage(onlinePlayer, "#37D7F6&lS#36CAF7&lt#35BDF8&la#34B0F9&lf#33A4FB&lf#3297FC&lC#318AFD&lh#307DFE&la#2F70FF&lt &f» "+ (sender instanceof Player p ? PlaceholderAPI.setPlaceholders(p, "%vault_prefix%") : "")+" "+sender.getName()+" &8» &7"+message);
+                onlinePlayer.sendMessage(colorize("#37D7F6&lS#36CAF7&lt#35BDF8&la#34B0F9&lf#33A4FB&lf#3297FC&lC#318AFD&lh#307DFE&la#2F70FF&lt &f» "+ (sender instanceof Player p ? PlaceholderAPI.setPlaceholders(p, "%vault_prefix%") : "")+" "+sender.getName()+" &8» &7")+message);
             }
         }
 
-        sendMessage(Bukkit.getConsoleSender(), "#37D7F6&lS#36CAF7&lt#35BDF8&la#34B0F9&lf#33A4FB&lf#3297FC&lC#318AFD&lh#307DFE&la#2F70FF&lt &f» "+ (sender instanceof Player p ? PlaceholderAPI.setPlaceholders(p, "%vault_prefix%") : "")+" "+sender.getName()+" &8» &7"+message);
+        Bukkit.getConsoleSender().sendMessage(colorize("#37D7F6&lS#36CAF7&lt#35BDF8&la#34B0F9&lf#33A4FB&lf#3297FC&lC#318AFD&lh#307DFE&la#2F70FF&lt &f» "+ (sender instanceof Player p ? PlaceholderAPI.setPlaceholders(p, "%vault_prefix%") : "")+" "+sender.getName()+" &8» &7")+message);
 
 
         try {
@@ -68,6 +68,7 @@ public class StaffChatCommand implements TabExecutor {
             JSONObject json = new JSONObject();
             json.put("username", !(sender instanceof Player p) ? "Consola" : p.getName());
             json.put("avatar_url", !(sender instanceof Player p) ? "https://minotar.net/avatar/DamianFarias/100" : "https://minotar.net/avatar/"+p.getName()+"/100");
+            json.put("content", message);
 
             HttpClient client = HttpClient.newHttpClient();
             HttpRequest request = HttpRequest.newBuilder()

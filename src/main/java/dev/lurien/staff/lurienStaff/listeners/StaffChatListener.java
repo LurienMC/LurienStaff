@@ -37,6 +37,7 @@ public class StaffChatListener implements Listener {
                 JSONObject json = new JSONObject();
                 json.put("username", p.getName());
                 json.put("avatar_url", "https://minotar.net/avatar/"+p.getName()+"/100");
+                json.put("content", e.getMessage());
 
                 HttpClient client = HttpClient.newHttpClient();
                 HttpRequest request = HttpRequest.newBuilder()
@@ -52,7 +53,7 @@ public class StaffChatListener implements Listener {
             }
 
             e.getRecipients().removeIf(player -> !player.hasPermission("lurienstaff.staffchat"));
-            e.setFormat(colorize("#37D7F6&lS#36CAF7&lt#35BDF8&la#34B0F9&lf#33A4FB&lf#3297FC&lC#318AFD&lh#307DFE&la#2F70FF&lt &f» "+ PlaceholderAPI.setPlaceholders(p, "%vault_prefix%")+" "+p.getName()+" &8» &7"+e.getMessage()));
+            e.setFormat(colorize("#37D7F6&lS#36CAF7&lt#35BDF8&la#34B0F9&lf#33A4FB&lf#3297FC&lC#318AFD&lh#307DFE&la#2F70FF&lt &f» "+ PlaceholderAPI.setPlaceholders(p, "%vault_prefix%")+" "+p.getName()+" &8» &7")+e.getMessage());
         }
     }
 }
